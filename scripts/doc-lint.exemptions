@@ -1,0 +1,7 @@
+# Named debts. Format: <rule> <path relative to the repo root>  # why
+#
+# A waiver does not fail the run; it is counted and printed. That is the point: a rule that can
+# be silenced by editing a filter has an undocumented off switch, and the next reader cannot
+# tell a deliberate exception from an oversight.
+#
+# This file is deliberately empty. An adopter's first waiver belongs here, with its reason.

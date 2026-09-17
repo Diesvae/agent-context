@@ -1,0 +1,190 @@
+# Addressable map of the directing context.
+#
+# The YAML ROUTES; the Markdown it points at is AUTHORITATIVE. Nothing here is a source of
+# truth about the system: it carries addresses, kinds and relations so that a mission can
+# compile the subgraph it needs instead of loading the whole corpus. Put meaning in a fiche
+# and this map starts competing with it — two writings of one fact, and they will diverge.
+#
+# Grain is the DOMAIN, never the fiche. At this grain completeness stays checkable: every
+# cross-cutting invariant, every app root and every active domain README must appear in some
+# node's `docs`, and the compiler refuses the map otherwise.
+version: 1
+
+defaults:
+  budget_tokens: 24000
+  expansion_depth: 1
+  max_targets: 3
+
+# Sources already read at boot by AGENTS.md. The compiler leaves them out unless asked,
+# so a compiled context never bills what the session has already paid for.
+startup_docs:
+  - AGENTS.md
+  - _direction/00_PROTOCOLE.md
+  - _direction/00_CARTE.md
+  - _direction/0_spirit/design-spirit.md
+  - _direction/memoire/MEMORY.md
+
+nodes:
+  - id: system.root
+    kind: system
+    label: Repository — the whole system
+    responsibility: Root of containment; carries the protocol and the map of branches.
+    docs:
+      - _direction/00_PROTOCOLE.md
+      - _direction/00_CARTE.md
+    triggers: [system, repository, protocol, direction, bootstrap]
+    contains:
+      - layer.infrastructure
+      - layer.conventions
+      - app.notes
+      - app.ledger
+
+  - id: layer.infrastructure
+    kind: layer
+    label: Level 1 — infrastructure invariants
+    responsibility: Invariants that make the frame stable and safe, valid for every app.
+    docs:
+      - _direction/1_infrastructure/README.md
+    triggers: [infrastructure, invariant, guard, frame, level 1]
+    contains:
+      - invariant.addressable-context
+      - invariant.open-register
+      - invariant.proof-of-guards
+
+  - id: layer.conventions
+    kind: layer
+    label: Level 2 — conventions for every app
+    responsibility: How an app normalises its own documentation and module boundaries.
+    docs:
+      - _direction/2_app-conventions/README.md
+    triggers: [convention, naming, documentation, module, level 2]
+    contains:
+      - invariant.documentation-naming
+      - invariant.module-boundaries
+
+  - id: invariant.addressable-context
+    kind: invariant
+    label: Addressable context — YAML routes, Markdown is authoritative
+    responsibility: The map carries addresses and relations; meaning stays in the fiches.
+    docs:
+      - _direction/1_infrastructure/addressable-context.md
+    code:
+      - scripts/context-compile.py
+      - _direction/cartes/system-map.yaml
+      - _direction/cartes/schema.yaml
+    triggers: [map, yaml, context map, compile, subgraph, addressable, routing]
+
+  - id: invariant.open-register
+    kind: invariant
+    label: The open register — what is not settled has its own home
+    responsibility: Undecided work lives in open/ fiches, one per object, never in a state fiche.
+    docs:
+      - _direction/1_infrastructure/open-register.md
+    code:
+      - scripts/open_register.py
+      - _direction/cartes/open.yaml
+    triggers: [open, undecided, arbitration, workstream, register, backlog]
+
+  - id: invariant.proof-of-guards
+    kind: invariant
+    label: A static guard is only worth its proof
+    responsibility: Every rule must be broken on purpose, seen red, then restored.
+    docs:
+      - _direction/1_infrastructure/proof-of-guards.md
+    code:
+      - scripts/doc-lint.sh
+      - scripts/prove-guards.sh
+    triggers: [guard, proof, lint, mutation, red, green, regression]
+
+  - id: invariant.documentation-naming
+    kind: invariant
+    label: Documentation naming — one axis of filing, declared code
+    responsibility: Fiche prefixes, one filing axis per tree, and code declared not derived.
+    docs:
+      - _direction/2_app-conventions/documentation-naming.md
+    triggers: [naming, prefix, filing, folder, declare code, convention]
+
+  - id: invariant.module-boundaries
+    kind: invariant
+    label: Module boundaries — when a fiche splits
+    responsibility: One fiche per concept, never per workstream; split at the ceiling, at a joint.
+    docs:
+      - _direction/2_app-conventions/module-boundaries.md
+    triggers: [module, boundary, split, concept, ceiling, fiche]
+
+  - id: app.notes
+    kind: application
+    label: Notes — the worked example
+    responsibility: A small app that exists so the levels 3 and 4 of the system are shown, not described.
+    status: filled
+    docs:
+      - _direction/app_notes/direction.md
+      - app_notes/_technique/README.md
+    aliases: [note, notebook]
+    triggers: [notes, note, notebook, example app]
+    contains:
+      - domain.notes.catalog
+      - domain.notes.platform
+      - contract.notes.account-api
+
+  - id: domain.notes.catalog
+    kind: domain
+    label: Notes — catalog
+    responsibility: Listing, sorting and rendering the notes a reader can browse.
+    docs:
+      - app_notes/_technique/catalog/README.md
+    code:
+      - app_notes/src/catalog.py
+    triggers: [catalog, listing, browse, sort, render, index]
+    constrained_by:
+      - invariant.documentation-naming
+      - invariant.module-boundaries
+
+  - id: domain.notes.platform
+    kind: domain
+    label: Notes — platform
+    responsibility: Storage, identity and the seam every other domain of the app goes through.
+    docs:
+      - app_notes/_technique/platform/README.md
+    code:
+      - app_notes/src/platform.py
+    triggers: [platform, storage, identity, account, seam, persistence]
+    constrained_by:
+      - invariant.addressable-context
+      - invariant.proof-of-guards
+
+  - id: contract.notes.account-api
+    kind: contract
+    label: Account API — the only seam between the two apps
+    responsibility: The single address by which another app reads an account of this one.
+    docs:
+      - app_notes/_technique/platform/CONC_account-api.md
+    triggers: [account api, contract, seam, cross app, http, token]
+    producer: domain.notes.platform
+    consumers:
+      - domain.ledger.platform
+
+  - id: app.ledger
+    kind: application
+    label: Ledger — a skeleton branch on purpose
+    responsibility: A second app, deliberately empty, so partitioning is testable and not asserted.
+    status: skeleton
+    docs:
+      - _direction/app_ledger/direction.md
+      - app_ledger/_technique/README.md
+    aliases: [accounting, book]
+    triggers: [ledger, accounting, book, skeleton, second app]
+    contains:
+      - domain.ledger.platform
+
+  - id: domain.ledger.platform
+    kind: domain
+    label: Ledger — platform
+    responsibility: Where the ledger will read accounts; declared before any code exists.
+    docs:
+      - app_ledger/_technique/platform/README.md
+    triggers: [ledger platform, ledger storage, ledger account]
+    depends_on:
+      - contract.notes.account-api
+    constrained_by:
+      - invariant.addressable-context

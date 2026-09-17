@@ -1,0 +1,32 @@
+# The open register — every unsettled object of every branch, reduced to its identity.
+#
+# Breadth is deliberate. Split per branch, a reader must first decide whether their subject is
+# cross-cutting or app-local — and that frontier is a property of the object, which is what
+# they are trying to look up. Getting it wrong makes "found nothing" indistinguishable from
+# "nothing exists", and the subject gets reopened from scratch.
+#
+# The matter lives in the fiche. This file carries identity, species and address only: a
+# register that carries the reasoning becomes a second writing of the fiche, older than it.
+#
+# NOT read at boot. Opened before new work, or to learn whether a subject was already settled.
+version: 1
+
+branches:
+  # A branch with nothing open still declares itself with an empty list. An absent branch is
+  # indistinguishable from a branch nobody has looked at — and only one of those is a fact.
+  - branch: transverse
+    objects: []
+
+  - branch: app_notes
+    objects:
+      - id: 1
+        species: workstream
+        subject: Search over note bodies — index shape not chosen
+        # Triggers are what make this object RECOGNISABLE from a free-form task. Without them
+        # the register is consulted only by whoever remembers to consult it, and it protects
+        # nothing: a session reopens a settled subject and no guard sees it.
+        triggers: [search, index, full text, note body, trie, inverted index]
+        fiche: app_notes/open/001-search-index.md
+
+  - branch: app_ledger
+    objects: []
