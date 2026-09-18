@@ -128,11 +128,14 @@ minute.
 - **Extracted from a private monorepo**, where it runs over five applications and a corpus far
   larger than this one. The **form** is here — protocol, map, selectors, guards, worked example.
   The content is not: app fiches, the journal and the accumulated memory corpus stay private.
-- **Four upstream rules were not extracted**, and the numbering here is contiguous rather than
-  matching upstream. They bind to surfaces this repository does not have: two halves of a
-  concept→class map over PHP and JavaScript, an epistemic-substrate registry, and design-system
-  projections. The omission is named rather than hidden, because a reader who finds a gap in a
-  numbering goes looking for the missing rule.
+- **Upstream has eighteen rules; five were not carried over, and one new rule was written in
+  their place.** The five bind to surfaces this repository does not have: two halves of a
+  concept→class map over PHP and JavaScript, a rule against dead code paths in cross-references,
+  an epistemic-substrate registry, and design-system projections. R14 here is the new one — a
+  language-agnostic mirror that keeps the spirit of the first two without their coupling to one
+  stack. Eighteen minus five plus one is the fourteen above. The numbering is contiguous rather
+  than matching upstream, and the omission is named rather than hidden, because a reader who
+  finds a gap in a numbering goes looking for the missing rule.
 - **The lexical scorer is lexical.** Selection is deterministic and explainable, not clever: it
   matches task tokens against declared triggers, identity and paths. Declaring good triggers is
   the work, and the compiler cannot do it for you.
