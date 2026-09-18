@@ -1,0 +1,31 @@
+name: guard
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  doc-lint:
+    name: 14 rules over the corpus
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install --quiet pyyaml jsonschema
+
+      # The guard proves what the protocol prescribes. It is the check an adopter runs.
+      - name: Run the guard
+        run: bash scripts/doc-lint.sh
+
+      # And the guard is only worth its proof: every rule is broken on purpose, seen red,
+      # restored, and checked green again. A rule that has only ever been green proves that
+      # it does not false-positive, and nothing else.
+      - name: Prove every rule can fire
+        run: bash scripts/prove-guards.sh
